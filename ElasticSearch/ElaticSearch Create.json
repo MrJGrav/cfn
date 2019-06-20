@@ -1,0 +1,63 @@
+"elk": {
+            "Type": "AWS::Elasticsearch::Domain",
+            "Properties": {
+                "AccessPolicies": {
+                    "Version": "2012-10-17",
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Principal": {
+                                "AWS": {
+                                    "Fn::GetAtt": [
+                                        "esuseraccess",
+                                        "Arn"
+                                    ]
+                                }
+                            },
+                            "Action": "es:*",
+                            "Resource": {
+                                "Fn::Sub": "arn:aws:es:${AWS::Region}:${AWS::AccountId}:domain/elk"
+                            }
+                        },
+                        {
+                            "Sid": "",
+                            "Effect": "Allow",
+                            "Principal": {
+                                "AWS": "*"
+                            },
+                            "Action": "es:*",
+                            "Resource": {
+                                "Fn::Sub": "arn:aws:es:${AWS::Region}:${AWS::AccountId}:domain/elk"
+                            },
+                            "Condition": {
+                                "IpAddress": {
+                                    "aws:SourceIp": [
+                                        "XX.XX.XX.XX",
+                                        "XX.XX.XX.XX"
+                                    ]
+                                }
+                            }
+                        }
+                    ]
+                },
+                "DomainName": "elk",
+                "EBSOptions": {
+                    "EBSEnabled": "True",
+                    "VolumeSize": 10,
+                    "VolumeType": "gp2"
+                },
+                "ElasticsearchClusterConfig": {
+                    "InstanceCount": 1,
+                    "InstanceType": "t2.small.elasticsearch"
+                },
+                "ElasticsearchVersion": "5.1",
+                "SnapshotOptions": {
+                    "AutomatedSnapshotStartHour": 0
+                }
+            },
+            "Metadata": {
+                "AWS::CloudFormation::Designer": {
+                    "id": "XXXXXXXXXXXX"
+                }
+            }
+        }
